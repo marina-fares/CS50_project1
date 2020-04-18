@@ -1,0 +1,37 @@
+{% extends 'layout.html' %}
+{% block title %} Register{% endblock  %}
+{% block css %}<link rel = "stylesheet" type = "text/css" href = "{{ url_for('static', filename='css/register.css') }}" >{% endblock  %}
+
+
+{% block form %}
+
+
+    <form class="col-8 log" action="{{ url_for('storedata') }}" method="post" >
+        <div class="content">
+            <div class="form-group">
+                <label for="exampleInputEmail1">First Name</label>
+                <input type="name" name="fname" class="form-control" id="fname" aria-describedby="int2">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1">Last Name</label>
+                <input type="name" name="lname" class="form-control" id="lname" aria-describedby="int2">
+            </div>
+            
+            <div class="form-group">
+                <label for="exampleInputEmail1">Email address</label>
+                <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+            </div>
+            
+            <div class="form-group">
+                <label for="exampleInputPassword1">Password</label>
+                <input type="password" name="pass" class="form-control" id="exampleInputPassword1">
+            </div>
+            <small id="emailHelp" class="form-text text-muted">We'll never share your data with anyone else.</small>
+            <div class="d-flex justify-content-center" style="margin:15px;">
+            <button type="submit" class=" btn btn-primary">Register</button>
+            </div>
+        </div>
+    </form>
+
+
+{% endblock  %}

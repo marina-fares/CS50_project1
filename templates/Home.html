@@ -1,0 +1,13 @@
+{% extends 'layout.html' %}
+{% block title %} Register{% endblock  %}
+{% block css %}<link rel = "stylesheet" type = "text/css" href = "{{ url_for('static', filename='css/home.css') }}" >{% endblock  %}
+
+{% block form %}
+<div class="log col-sm-4 text-center" >
+<img class="img-responsive text-cente" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQ5X4hHC2D5gNoNrRtln36_SEZfZcdbEWJAsKIZZizdWWFLB3lV&usqp=CAU">
+<button type="submit" class=" btn btn-primary"><a  href="{{url_for('register')}}">Register</a></button>
+<button type="submit" class=" btn btn-primary"><a  href="{{url_for('login')}}">LogIn</a></button>
+
+</dib>
+{% endblock  %}
+

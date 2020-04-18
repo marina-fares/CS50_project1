@@ -1,0 +1,7 @@
+{% extends 'layout.html' %}
+{% block title %}Login{% endblock  %}
+        {% block css %}<link rel = "stylesheet" type = "text/css" href = "{{ url_for('static', filename='') }}" >{% endblock  %}
+
+{% block form %}
+<h1>Error {{message}}</h1>
+{%endblock%}

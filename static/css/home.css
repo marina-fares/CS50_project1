@@ -1,0 +1,36 @@
+body{
+    background-image:url("bg.jpg");
+    background-size: 1300px 700px;
+    overflow: hidden;
+
+}
+
+.log{
+    background-color:white;
+    opacity:0.9;
+    border-radius: 20px / 20px;
+    overflow: hidden;
+    position: absolute;
+    width: 400px;
+    top: 50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+    padding:30px;
+}
+
+nav{
+    opacity: 0.9;
+}
+button{
+    margin:20px;
+}
+ 
+a{
+    text-decoration: none;
+    color:white;
+}
+
+a::hover{
+    text-decoration: none;
+    color:white;
+}

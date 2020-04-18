@@ -1,0 +1,16 @@
+body{
+    background-image:url("bg.jpg");
+    background-size: 1300px 700px;
+}
+
+form{
+background-color:white;
+    opacity:0.9;
+    margin:160px;
+    border-radius: 20px / 20px;
+}
+ 
+.content{
+    padding: 40px;
+
+}
