@@ -1,0 +1,115 @@
+body{
+    background-image:url("https://images.pexels.com/photos/904616/pexels-photo-904616.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500");
+    background-size: 100% 100%;
+    overflow-x: hidden;
+}
+.container{
+    margin-right:0px;
+}
+.card{
+    opacity: 0.9;
+    margin:5px;
+    padding:20px;
+}
+button{
+    max-width: 180px;
+}
+.body{
+    background-color:rgb(155, 148, 148);
+    opacity: 0.9;
+    margin:30px;
+    padding-top:15px;
+    border-radius: 20px;
+    color: white;
+    height:200px;
+}
+
+h1{
+    font-weight: bold;
+}
+
+.listitem{
+    font-size: 50px;
+    font-family: "Lucida Console", Courier, monospace;
+}
+
+.bookdetails{
+    font-size: small;
+    padding-top: 70px;
+}
+
+.reviewform{
+    margin-left:650px;
+}
+
+
+
+.mt-100 {
+    margin-top: 100px
+}
+
+.progress-bar {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -ms-flex-pack: center;
+    justify-content: center;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    background-color: #007bff;
+    transition: width 0.6s ease
+}
+
+.progress {
+    height: auto;
+    border-radius: 0;
+    background-color: #f2f2f2;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 18px
+}
+
+.margin-bottom-1x {
+    margin-bottom: 24px !important
+}
+
+.btn-block {
+    display: block;
+    width: 100%;
+    margin-top: 12px;
+    margin-right: 0 !important;
+    margin-bottom: 12px;
+    margin-left: 0 !important;
+    padding-right: 15px !important;
+    padding-left: 15px !important
+}
+
+.btn-warning,
+.btn-danger {
+    color: #fff
+}
+
+.btn-warning:hover {
+    background-color: #d2a306;
+    color: #fff
+}
+
+.fa {
+    font-size: 11px
+}
+
+.full-rating {
+    font-size: 14px;
+    font-weight: 600
+}
+
+.singlereview{
+    background-color: white;
+    opacity: 0.9;
+    margin-right:100px;
+    height: 300px;
+    margin-bottom: 100px;
+    border-left: 50px solid #d2a306;
+}

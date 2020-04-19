@@ -1,0 +1,17 @@
+body{
+    background-color: gray;
+}
+.container{
+    margin-right:0px;
+}
+.card{
+    opacity: 0.9;
+    margin:5px;
+    padding:20px;
+}
+button{
+    max-width: 180px;
+}
+.reviewform{
+    margin-left:650px;
+}

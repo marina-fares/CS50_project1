@@ -7,7 +7,7 @@
         
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
        
-        <link rel = "stylesheet" type = "text/css" href = "{{ url_for('static', filename='css/welcome.css') }}" >
+        {%block style%}<link rel = "stylesheet" type = "text/css" href = "{{ url_for('static', filename='css/welcome.css') }}" >{%endblock%}
         
         <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
@@ -25,14 +25,14 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
                 </li>
-            </ul>
-            <form class="form-inline my-2 my-lg-0" action="{{url_for('search')}}" method="post">
+            
+            <form class="form-inline my-2 my-lg-0 reviewform" action="{{url_for('search',id=user[0].id)}}" method="post">
                 <input class="form-control mr-sm-2" type="search" name="book" placeholder="Search" aria-label="Search">
                 <button class="btn btn-primary my-2 my-sm-0"  type="submit">Search</button>
             </form>
 
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <li class="nav-item dropdown ">
+                <a class="nav-link dropdown-toggle " href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {{user[0].fname}} {{user[0].lname}}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -42,15 +42,32 @@
                     <a class="dropdown-item" href="{{url_for('home')}}">LogOut</a>
                 </div>
             </li>
-
+            </ul>
         </div>
     </nav>
 {% block form %}
-<ul>
-{% for b in booklist%}
-<li>{{b}}</li>
-{%endfor%}
+<div class="container">
+    <div class="row">
+        {% for b in booklist%}
+        <div class="col-3 card">
+        <p>isbn : {{b["books"][0]["isbn"]}}</p>
+        <p>ratings_count : {{b["books"][0]["ratings_count"]}}</p>
+        <p>reviews_count : {{b["books"][0]["reviews_count"]}}</p>
+        <p>text_reviews_count : {{b["books"][0]["text_reviews_count"]}}</p>
+        <p>work_ratings_count : {{b["books"][0]["work_ratings_count"]}}</p>
+        <p>work_reviews_count : {{b["books"][0]["work_reviews_count"]}}</p>
+        <p>work_text_reviews_count : {{b["books"][0]["work_text_reviews_count"]}}</p>
+        <p>average_rating : {{b["books"][0]["average_rating"]}}</p>
+        <form action="{{url_for ( 'book' ,id=user[0].id, isbn=b["books"][0]["isbn"])}}" method="post" >
+        <button type="submit" class="btn btn-info" name="id" >Choose Book</button>
+        </form>
+        </div>
+        {%endfor%}
+    </div>
+</div>
+        
 {% endblock  %}
-</ul>
+{% block review %}
+{% endblock  %}
     </body>
 </html>

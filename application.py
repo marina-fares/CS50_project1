@@ -24,7 +24,6 @@ engine = create_engine("postgres://nauoudlmqbspyu:74b79990dbe93ff1b012f6757f5100
 db = scoped_session(sessionmaker(bind=engine))
 
 
-users=[]
 deic=[]
 
 
@@ -59,32 +58,58 @@ def login():
 
 @app.route("/account",methods=["post"])
 def getaccount():
-    users.clear()
     email=request.form.get("email")
     passw=int(request.form.get("password"))
     user=db.execute("select * from users where email=:e and password=:p",{'e':email,"p":passw}).fetchall()
     if len(user)==0:
         return render_template("error.html",message="email or password is wrong")
     else:
-        users.append(user)
-        return render_template("welcome.html",user=users[0])
+        return render_template("welcome.html",user=user)
 
 @app.route("/welcome")
 def welcome():
     return render_template("login.html",name=name)
 
-@app.route("/search",methods=["post"])
-def search():
+@app.route("/search/<id>",methods=["post"])
+def search(id):
     deic.clear()
     book=request.form.get("book")
+    user=db.execute("select * from users where id=:i ",{'i':id}).fetchall()
     search_string= f"%{book}%"
     booklist=db.execute("SELECT * FROM books WHERE isbn LIKE :searching_string LIMIT 5",{"searching_string":search_string})
-    #booklist=db.execute("SELECT * FROM books WHERE isbn=:i OR author=:i OR title=:i",{"i":book})
-    #booklist=db.execute("SELECT * FROM books WHERE isbn LIKE '%03%' ")
+    if booklist is None:
+        booklist=(db.execute("SELECT * FROM books WHERE isbn=:i OR author=:i OR title=:i",{"i":book}))
     for b in booklist:
         res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "iCodj2mDov5hoHYYVYKJlw", "isbns": b.isbn})
         deic.append(res.json())
-    return render_template("welcome.html",booklist=deic,user=users[0])
+    return render_template("welcome.html",booklist=deic,user=user)
+
+@app.route("/book/<id>/<isbn>",methods=["post"])
+def book(id,isbn):
+    user=db.execute("select * from users where id=:i ",{'i':id}).fetchall()
+    details=db.execute("SELECT * FROM books WHERE isbn=:isbn", {'isbn':isbn}).fetchall()
+    return render_template("book.html",book=details,user=user)
+
+@app.route("/review/<id>/<isbn>",methods=["post"])
+def review(id,isbn):
+    user=db.execute("select * from users where id=:i ",{'i':id}).fetchall()
+    details=db.execute("SELECT * FROM books WHERE isbn=:isbn", {'isbn':isbn}).fetchall()
+    rate=int(request.form.get("rate"))
+    commint=request.form.get("commint")
+    if rate :
+        db.execute("INSERT INTO reviews (userid,isbn,rate,commint) VALUES (:u, :i,:r,:c)",
+            {"u": id, "i": isbn, "r": rate, "c": commint})
+        db.commit()
+    
+    return render_template("book.html",book=details,user=user)
+
+@app.route("/review/<id>/<isbn>/sub")
+def subreview(id,isbn):
+    user=db.execute("select * from users where id=:i ",{'i':id}).fetchall()
+    details=db.execute("SELECT * FROM books WHERE isbn=:isbn", {'isbn':isbn}).fetchall()
+    
+    return render_template("review.html",book=details,user=user)
+
 
 app.run(debug=True)
 

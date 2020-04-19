@@ -1,0 +1,26 @@
+{% extends 'book.html' %}
+{%block style%}<link rel = "stylesheet" type = "text/css" href = "{{ url_for('static', filename='css/book.css') }}" >{%endblock%}
+{% block review %}
+
+
+<div class="row d-flex justify-content-center mt-100">
+    <div class="col-md-6 mb-4">
+        <div class="card border-default">
+            <div class="card-body">
+                <div class="pt-2">
+                    <form  action="{{url_for('review',id=user[0].id,isbn=book[0].isbn)}}" method="post">
+                        <label class="mr-sm-5" for="message">Your rating</label>
+                            <input name="rate" class="form-control col-2" id="input-21e" value="0" type="number" class="rating" min=0 max=5 step=0.5 data-size="xs" style="margin-bottom:5px;">
+                        <textarea class="form-control mr-sm-2" type="text" name="commint" placeholder="Leave a Commint" aria-label="Search"></textarea>
+                        <div class="pt-2">
+                        <button class="btn btn-warning btn-block" type="submit" data-toggle="modal" data-target="#leaveReview" data-abc="true">Submit Review</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock  %}
