@@ -109,7 +109,10 @@ h1{
     background-color: white;
     opacity: 0.9;
     margin-right:100px;
-    height: 300px;
+    
     margin-bottom: 100px;
     border-left: 50px solid #d2a306;
+    padding: 15px;
 }
+
+

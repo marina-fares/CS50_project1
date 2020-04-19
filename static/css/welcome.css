@@ -1,17 +1,19 @@
 body{
-    background-color: gray;
+    background-image:url("https://images.pexels.com/photos/2253753/pexels-photo-2253753.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500");
+    background-size: 1300px 700px;
 }
-.container{
-    margin-right:0px;
-}
-.card{
-    opacity: 0.9;
-    margin:5px;
-    padding:20px;
-}
-button{
-    max-width: 180px;
-}
+
 .reviewform{
     margin-left:650px;
+}
+
+
+.body{
+    background-color:rgb(155, 148, 148);
+    opacity: 0.9;
+    margin:30px;
+    padding-top:15px;
+    border-radius: 20px;
+    color: white;
+    height:200px;
 }

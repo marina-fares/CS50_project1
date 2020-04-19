@@ -46,8 +46,14 @@
         </div>
     </nav>
 {% block form %}
+<div class="body">
+    <h1 class="text-center">Welcome {{user[0].fname}}</h1>
+    <h4 class="text-center">You can search for any book you want</h4>
+</div>
+
 <div class="container">
     <div class="row">
+    
         {% for b in booklist%}
         <div class="col-3 card">
         <p>isbn : {{b["books"][0]["isbn"]}}</p>
@@ -63,11 +69,13 @@
         </form>
         </div>
         {%endfor%}
+    
     </div>
 </div>
         
 {% endblock  %}
 {% block review %}
+
 {% endblock  %}
     </body>
 </html>

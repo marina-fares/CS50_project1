@@ -4,4 +4,9 @@
 
 {% block form %}
 <h1>Error {{message}}</h1>
+
+
+{% for category, message in get_flashed_messages(with_categories=True) %}
+            <div class="alert alert-{{category}}">Error: {{ message }}</div>
+        {% endfor %}
 {%endblock%}

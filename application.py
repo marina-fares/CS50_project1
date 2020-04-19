@@ -1,13 +1,15 @@
 
 import os
 import requests
-from flask import Flask, session, render_template, request
+from flask import Flask, session, render_template, request, flash, jsonify
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 
 app = Flask(__name__)
+
+
 #postgres://nauoudlmqbspyu:74b79990dbe93ff1b012f6757f51005d27830a1842441c5adae61aff9b050382@ec2-3-91-112-166.compute-1.amazonaws.com:5432/dfkq5v1f2772on
 link="postgres://nauoudlmqbspyu:74b79990dbe93ff1b012f6757f51005d27830a1842441c5adae61aff9b050382@ec2-3-91-112-166.compute-1.amazonaws.com:5432/dfkq5v1f2772on"
 # Check for environment variable
@@ -62,6 +64,7 @@ def getaccount():
     passw=int(request.form.get("password"))
     user=db.execute("select * from users where email=:e and password=:p",{'e':email,"p":passw}).fetchall()
     if len(user)==0:
+        
         return render_template("error.html",message="email or password is wrong")
     else:
         return render_template("welcome.html",user=user)
@@ -88,20 +91,28 @@ def search(id):
 def book(id,isbn):
     user=db.execute("select * from users where id=:i ",{'i':id}).fetchall()
     details=db.execute("SELECT * FROM books WHERE isbn=:isbn", {'isbn':isbn}).fetchall()
-    return render_template("book.html",book=details,user=user)
+    reviews=db.execute("SELECT * FROM users INNER JOIN reviews ON users.id = reviews.userid").fetchall()
+    
+    return render_template("book.html",book=details,user=user,reviews=reviews)
 
 @app.route("/review/<id>/<isbn>",methods=["post"])
 def review(id,isbn):
+    error=None
     user=db.execute("select * from users where id=:i ",{'i':id}).fetchall()
     details=db.execute("SELECT * FROM books WHERE isbn=:isbn", {'isbn':isbn}).fetchall()
-    rate=int(request.form.get("rate"))
+    reviews=db.execute("SELECT * FROM users INNER JOIN reviews ON users.id = reviews.userid").fetchall()
+    rate=float(request.form.get("rate"))
     commint=request.form.get("commint")
+    res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "iCodj2mDov5hoHYYVYKJlw", "isbns": isbn})
+    deic.append(res.json())
     if rate :
-        db.execute("INSERT INTO reviews (userid,isbn,rate,commint) VALUES (:u, :i,:r,:c)",
-            {"u": id, "i": isbn, "r": rate, "c": commint})
-        db.commit()
-    
-    return render_template("book.html",book=details,user=user)
+        if db.execute("SELECT * FROM reviews WHERE isbn=:isbn and userid=:id", {'isbn':isbn,'id':id}).rowcount==0:
+            db.execute("INSERT INTO reviews (userid,isbn,rate,commint) VALUES (:u, :i,:r,:c)",
+                {"u": id, "i": isbn, "r": rate, "c": commint})
+            db.commit()
+        else:
+            return render_template("error.html",message="you already submit a review for this book")
+    return render_template("book.html",book=details,user=user,reviews=reviews,error=error,deic=deic)
 
 @app.route("/review/<id>/<isbn>/sub")
 def subreview(id,isbn):
@@ -109,6 +120,23 @@ def subreview(id,isbn):
     details=db.execute("SELECT * FROM books WHERE isbn=:isbn", {'isbn':isbn}).fetchall()
     
     return render_template("review.html",book=details,user=user)
+
+@app.route("/api/<isbn>")
+def api(isbn):
+    res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "iCodj2mDov5hoHYYVYKJlw", "isbns": isbn})
+    if res.status_code != 200:
+        raise Exception("ERROR: API request unsuccessful.")
+    data = res.json()
+    details=db.execute("SELECT * FROM books WHERE isbn=:isbn", {'isbn':isbn}).fetchall()
+    return jsonify({
+              "title": details[0].title,
+              "author": details[0].author,
+              "year": details[0].year,
+              "isbn": isbn,
+              "review_count": data["books"][0]["ratings_count"],
+              "average_score": data["books"][0]["average_rating"]
+          })
+
 
 
 app.run(debug=True)
