@@ -1,4 +1,3 @@
-
 import os
 import requests
 from flask import Flask, session, render_template, request, flash, jsonify
@@ -50,8 +49,7 @@ def storedata():
             {"f": fname, "l": lname, "e": email, "p": passw})
             db.commit()
             return render_template("Home.html")
-    else:
-        return render_template("error.html",message="this email or username is used before please try again")
+    return render_template("error.html",message="this email or username is used before please try again")
         
 
 @app.route("/login")
@@ -61,50 +59,60 @@ def login():
 @app.route("/account",methods=["post"])
 def getaccount():
     email=request.form.get("email")
-    passw=int(request.form.get("password"))
+    passw=request.form.get("password")
     user=db.execute("select * from users where email=:e and password=:p",{'e':email,"p":passw}).fetchall()
-    if len(user)==0:
-        
+    if len(user)==0:        
         return render_template("error.html",message="email or password is wrong")
     else:
         return render_template("welcome.html",user=user)
 
-@app.route("/welcome")
-def welcome():
-    return render_template("login.html",name=name)
 
 @app.route("/search/<id>",methods=["post"])
 def search(id):
     deic.clear()
+    booklist=[]
     book=request.form.get("book")
     user=db.execute("select * from users where id=:i ",{'i':id}).fetchall()
+    
     search_string= f"%{book}%"
-    booklist=db.execute("SELECT * FROM books WHERE isbn LIKE :searching_string LIMIT 5",{"searching_string":search_string})
-    if booklist is None:
-        booklist=(db.execute("SELECT * FROM books WHERE isbn=:i OR author=:i OR title=:i",{"i":book}))
-    for b in booklist:
-        res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "iCodj2mDov5hoHYYVYKJlw", "isbns": b.isbn})
-        deic.append(res.json())
-    return render_template("welcome.html",booklist=deic,user=user)
+    booklist=db.execute("SELECT * FROM books WHERE title LIKE :searching_string OR isbn LIKE :searching_string OR author LIKE :searching_string LIMIT 50",{"searching_string":search_string}).fetchall()
+    
+    try:
+        book=int(book)
+        newbooklist=db.execute("SELECT * FROM books WHERE year = :searching_string LIMIT 50",{"searching_string":book}).fetchall()
+        booklist+=newbooklist
+    except: 
+        pass
+    try:
+        for b in booklist:
+            res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "iCodj2mDov5hoHYYVYKJlw", "isbns": b.isbn})
+            deic.append(res.json())
+    except:
+        pass
+
+    return render_template("welcome.html",booklist=deic,user=user,books=booklist)
 
 @app.route("/book/<id>/<isbn>",methods=["post"])
 def book(id,isbn):
-    user=db.execute("select * from users where id=:i ",{'i':id}).fetchall()
+    user   =db.execute("select * from users where id=:i ",{'i':id}).fetchall()
     details=db.execute("SELECT * FROM books WHERE isbn=:isbn", {'isbn':isbn}).fetchall()
     reviews=db.execute("SELECT * FROM users INNER JOIN reviews ON users.id = reviews.userid").fetchall()
     
-    return render_template("book.html",book=details,user=user,reviews=reviews)
+    innerreviews=db.execute("SELECT * FROM reviews where isbn=:i",{'i':isbn}).fetchall()
+
+    res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "iCodj2mDov5hoHYYVYKJlw", "isbns": isbn})
+    deic=res.json()
+    return render_template("book.html",book=details,user=user,reviews=reviews,deic=deic)
 
 @app.route("/review/<id>/<isbn>",methods=["post"])
 def review(id,isbn):
-    error=None
     user=db.execute("select * from users where id=:i ",{'i':id}).fetchall()
     details=db.execute("SELECT * FROM books WHERE isbn=:isbn", {'isbn':isbn}).fetchall()
     reviews=db.execute("SELECT * FROM users INNER JOIN reviews ON users.id = reviews.userid").fetchall()
     rate=float(request.form.get("rate"))
     commint=request.form.get("commint")
     res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "iCodj2mDov5hoHYYVYKJlw", "isbns": isbn})
-    deic.append(res.json())
+    deic=res.json()
     if rate :
         if db.execute("SELECT * FROM reviews WHERE isbn=:isbn and userid=:id", {'isbn':isbn,'id':id}).rowcount==0:
             db.execute("INSERT INTO reviews (userid,isbn,rate,commint) VALUES (:u, :i,:r,:c)",
@@ -112,13 +120,14 @@ def review(id,isbn):
             db.commit()
         else:
             return render_template("error.html",message="you already submit a review for this book")
-    return render_template("book.html",book=details,user=user,reviews=reviews,error=error,deic=deic)
+    return book(id,isbn)
+
 
 @app.route("/review/<id>/<isbn>/sub")
 def subreview(id,isbn):
     user=db.execute("select * from users where id=:i ",{'i':id}).fetchall()
     details=db.execute("SELECT * FROM books WHERE isbn=:isbn", {'isbn':isbn}).fetchall()
-    
+   
     return render_template("review.html",book=details,user=user)
 
 @app.route("/api/<isbn>")

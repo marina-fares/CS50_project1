@@ -51,11 +51,18 @@
     <h4 class="text-center">You can search for any book you want</h4>
 </div>
 
-<div class="container">
-    <div class="row">
+<div class="container" >
+    <div class="row" >
     
         {% for b in booklist%}
-        <div class="col-3 card">
+        <div class="col-3 card" style="margin:20px;">
+        {% for book in books%}
+        {% if book.isbn == b["books"][0]["isbn"]%}
+            <p>Title : {{book.title}}</p>
+            <p>author : {{book.author}}</p>
+            <p>Book Year : {{book.year}}</p>
+        {%endif%}
+        {%endfor%}
         <p>isbn : {{b["books"][0]["isbn"]}}</p>
         <p>ratings_count : {{b["books"][0]["ratings_count"]}}</p>
         <p>reviews_count : {{b["books"][0]["reviews_count"]}}</p>

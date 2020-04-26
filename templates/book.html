@@ -27,7 +27,7 @@
             <div class="card-body">
                 <div class="text-center">
 
-                    <div class="d-inline align-baseline display-2 mr-1">{{deic[0]["books"][0]["average_rating"]}}<span class="full-rating">/5</span></div>
+                    <div class="d-inline align-baseline display-2 mr-1">{{deic["books"][0]["average_rating"]}}<span class="full-rating">/5</span></div>
                     <div class=" align-baseline text-sm text-warning mr-1"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></div>
                 </div>
                 
@@ -54,6 +54,8 @@
 
 
 {% for r in reviews %}
+
+{%if r.isbn==book[0].isbn%}
 <div class="singlereview">
     <ul>
         <li>User Name: {{r.fname}} {{r.lname}}</li>
@@ -61,13 +63,14 @@
         <li>Commint: {{r.commint}}</li>
     </ul>
 </div>
+{%endif%}
 {% endfor %}
 
 
 <div class="singlereview">
     <h1 class="text-center">Reviews from Goodreads</h1>
-    <h4 class="text-left"> Number of Ratings : {{deic[0]["books"][0]["ratings_count"]}}</h4>
-    <h class="text-left"> Average of rating : {{deic[0]["books"][0]["average_rating"]}}<p>
+    <h4 class="text-left"> Number of Ratings : {{deic["books"][0]["ratings_count"]}}</h4>
+    <h class="text-left"> Average of rating : {{deic["books"][0]["average_rating"]}}<p>
 </div>
 
 {% endblock  %}
