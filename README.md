@@ -6,12 +6,12 @@ you can register for your website and then log in using your username and passwo
 
 #files
 .
-├── static/css                   # all css files
-│    ├── book.css
-│    ├── home.css
-│    ├── login.css
-│    ├── register.css
-│    ├── welcome.css
+├── static/css                   # all css files<br/>
+│    ├── book.css<br/>
+│    ├── home.css<br/>
+│    ├── login.css<br/>
+│    ├── register.css<br/>
+│    ├── welcome.css<br/>
 ├── templates                    # all html files                                 
 │    ├── layout.html
 │    ├── error.html
