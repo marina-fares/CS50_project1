@@ -55,26 +55,16 @@
     <div class="row" >
     
         {% for b in booklist%}
-        <div class="col-3 card" style="margin:20px;">
+        <div class="col-3 " style="margin:20px;">
         {% for book in books%}
         {% if book.isbn == b["books"][0]["isbn"]%}
-            <p>Title : {{book.title}}</p>
-            <p>author : {{book.author}}</p>
-            <p>Book Year : {{book.year}}</p>
-        {%endif%}
-        {%endfor%}
-        <p>isbn : {{b["books"][0]["isbn"]}}</p>
-        <p>ratings_count : {{b["books"][0]["ratings_count"]}}</p>
-        <p>reviews_count : {{b["books"][0]["reviews_count"]}}</p>
-        <p>text_reviews_count : {{b["books"][0]["text_reviews_count"]}}</p>
-        <p>work_ratings_count : {{b["books"][0]["work_ratings_count"]}}</p>
-        <p>work_reviews_count : {{b["books"][0]["work_reviews_count"]}}</p>
-        <p>work_text_reviews_count : {{b["books"][0]["work_text_reviews_count"]}}</p>
-        <p>average_rating : {{b["books"][0]["average_rating"]}}</p>
+        
         <form action="{{url_for ( 'book' ,id=user[0].id, isbn=b["books"][0]["isbn"])}}" method="post" >
-        <button type="submit" class="btn btn-info" name="id" >Choose Book</button>
+        <button type="submit" class="btn btn-info" name="id" >{{book.title}}</button>
         </form>
         </div>
+        {%endif%}
+        {%endfor%}
         {%endfor%}
     
     </div>
